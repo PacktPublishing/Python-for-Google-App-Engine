@@ -1,0 +1,25 @@
+application: book-123456
+version: 2
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+libraries:
+- name: MySQLdb
+  version: "latest"
+
+builtins:
+- django_wsgi: on
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /.*
+  script: notes.wsgi.application
+
+#env_variables:
+#  DJANGO_SETTINGS_MODULE: 'notes.settings'
+#  DATABASE_NAME: 'django_notes'
+#  DATABASE_USER: 'root'
+#  DATABASE_INSTANCE_ID: 'book-123456:myfirst'

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Notes</title>
+
+  <link rel="stylesheet" type="text/css" href="/static/css/notes.css">
+</head>
+<body>
+  <div class="container">
+
+    <h1>Welcome to Notes!</h1>
+    <h5>Built with Django {{ django_version }}.</h5>
+
+    <ul class="menu">
+      <li>Hello, <b>{{ user }}</b></li>
+      <li><a href="{% url 'django.contrib.auth.views.logout' %}">Logout</a></li>
+    </ul>
+
+    <form method="post" action="" enctype="multipart/form-data">
+      <legend>Add a new note</legend>
+
+      {# Show visible fields #}
+      {% for field in form.visible_fields %}
+      <div class="form-group">
+        {{ field.errors }}
+        {{ field.label_tag }}
+        {{ field }}
+      </div>
+      {% endfor %}
+
+      {# Include hidden fields #}
+      {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+      {% endfor %}
+
+      {% csrf_token %}
+      <div class="form-group">
+        <button type="submit">Save note</button>
+      </div>
+    </form>
+
+    {% for note in notes %}
+    <div class="note">
+      <h4>{{ note.title }}</h4>
+      <p class="note-content">{{ note.content }}</p>
+      {% if note.attach %}
+      <ul>
+        {% if note.thumbnail_url %}
+        <li class="file">
+          <a href="{{ note.attach.url }}">
+            <img src="{{ note.thumbnail_url }}">
+          </a>
+        </li>
+        {% else %}
+        <li class="file">
+          <a href="{{ note.attach.url }}">{{ note.attach.name }}</a>
+        </li>
+        {% endif %}
+      </ul>
+      {% endif %}
+      {% if note.checklist_items %}
+      <ul>
+        {% for item in note.checklist_items.all %}
+        <li class="{%if item.checked%}checked{%endif%}">
+          <a href="#">{{item.title}}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+</body>
+</html>

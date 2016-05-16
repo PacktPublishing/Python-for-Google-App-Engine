@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Notes</title>
+
+  <link rel="stylesheet" type="text/css" href="static/css/notes.css">
+</head>
+<body>
+  <div class="container">
+
+    <h1>Welcome to Notes!</h1>
+    <h5>{{ note_count }} notes stored so far!</h5>
+
+    <ul class="menu">
+      <li>Hello, <b>{{ user }}</b></li>
+      <li><a href="{{ logout_url }}">Logout</a></li>
+      <li><a href="/shrink">Shrink images</a></li>
+    </ul>
+
+    <form action="" method="post" enctype="multipart/form-data">
+      <legend>Add a new note</legend>
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title"/>
+      </div>
+      <div class="form-group">
+        <label for="content">Content:</label>
+        <textarea id="content" name="content"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="checklist_items">Checklist items:</label>
+        <input type="text" id="checklist_items" name="checklist_items"
+               placeholder="comma,separated,values"/>
+      </div>
+      <div class="form-group">
+        <label for="uploaded_file">Attached file:</label>
+        <input type="file" id="uploaded_file" name="uploaded_file">
+      </div>
+      <div class="form-group">
+        <button type="submit">Save note</button>
+      </div>
+    </form>
+
+    {% for note in notes %}
+    <div class="note">
+      <h4>{{ note.title }}</h4>
+      <p class="note-content">{{ note.content }}</p>
+      {% if note.files %}
+      <ul>
+        {% for file in note.files %}
+        {% if file.get().thumbnail_url %}
+        <li class="file">
+          <a href="{{ file.get().url }}">
+            <img src="{{ file.get().thumbnail_url }}">
+          </a>
+        </li>
+        {% else %}
+        <li class="file">
+          <a href="{{ file.get().url }}">{{ file.get().name }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% if note.checklist_items %}
+      <ul>
+        {% for item in note.checklist_items %}
+        <li class="{%if item.checked%}checked{%endif%}">
+          <a href="/toggle/{{ note.key.urlsafe() }}/{{ loop.index }}">{{item.title}}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Javascript here -->
+  <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+  <script type="text/javascript" src="static/js/client.js"></script>
+</body>
+</html>

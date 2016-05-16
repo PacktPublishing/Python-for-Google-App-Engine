@@ -1,0 +1,4 @@
+cron:
+- description: shrink images in the GCS
+  url: /shrink_all
+  schedule: every day 00:00

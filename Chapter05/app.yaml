@@ -1,0 +1,33 @@
+application: book-123456
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: .*
+  script: main.app
+
+libraries:
+- name: webapp2
+  version: "2.5.2"
+
+- name: jinja2
+  version: latest
+
+- name: MySQLdb
+  version: latest
+
+inbound_services:
+- mail
+
+env_variables:
+  #CLOUD_SQL_IP: '173.194.241.187'
+  CLOUD_SQL_IP: 'localhost'
+  CLOUD_SQL_USER: 'notes'
+  CLOUD_SQL_PASS: 'notes_password'
+  CLOUD_SQL_INSTANCE_ID: 'book-123456:myfirst'
+
